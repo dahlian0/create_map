@@ -107,7 +107,9 @@ def detect(opt):
 
     cross_box=[]
     appeared_id=[]
-    xy=[]
+    xy_0=[]
+    xy_1=[]
+    xy_2=[]
     class_name=[]
 
     if pt and device.type != 'cpu':
@@ -198,7 +200,12 @@ def detect(opt):
                             if not id in appeared_id :
                                 cross_box.append([midpoint,frame_idx,c,id])
                                 appeared_id.append(id)
-                                xy.append([midpoint,frame_idx])
+                                if c == 0:
+                                    xy_0.append([midpoint,frame_idx])
+                                if c == 1:
+                                    xy_1.append([midpoint,frame_idx])
+                                if c == 2:
+                                    xy_2.append([midpoint,frame_idx])
                                 class_name.append(c)
                             print(cross_box)
 
@@ -243,15 +250,20 @@ def detect(opt):
         if platform == 'darwin':  # MacOS
             os.system('open ' + save_path)
 
-    x, y = zip(*xy)
     plt.figure(figsize=(5,20))
-    plt.scatter(x, y)
+    x0, y0 = zip(*xy_0)
+    plt.scatter(x0, y0,s=100, label='Rose1',c='orchid')
+    x1, y1 = zip(*xy_1)
+    plt.scatter(x1, y1,s=100, label='Rose2',c = 'dodgerblue')
+    x2, y2 = zip(*xy_2)
+    plt.scatter(x2, y2,s=100,label='Rose3',c='mediumseagreen')
     ax=plt.gca()                            # get the axis
     ax.set_ylim(ax.get_ylim()[::-1])        # invert the axis
     ax.xaxis.tick_top()                     # and move the X-Axis      
     #ax.yaxis.set_ticks(np.arange(0, 16, 1)) # set y-ticks
     ax.yaxis.tick_left()                    # remove right y-Ticks
-    plt.savefig('figure02.jpg')
+    plt.legend()
+    plt.savefig('figure03.jpg')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
