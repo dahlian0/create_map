@@ -1,5 +1,6 @@
 # limit the number of cpus used by high performance libraries
 import os
+import csv
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
@@ -104,6 +105,8 @@ def detect(opt):
     # extract what is in between the last '/' and last '.'
     txt_file_name = source.split('/')[-1].split('.')[0]
     txt_path = str(Path(save_dir)) + '/' + txt_file_name + '.txt'
+    csv_path = str(Path(save_dir)) + '/' + txt_file_name + '.csv'
+    jpg_path = str(Path(save_dir)) + '/' + txt_file_name + '.jpg'
 
     cross_box=[]
     appeared_id=[]
@@ -263,7 +266,11 @@ def detect(opt):
     #ax.yaxis.set_ticks(np.arange(0, 16, 1)) # set y-ticks
     ax.yaxis.tick_left()                    # remove right y-Ticks
     plt.legend()
-    plt.savefig('figure03.jpg')
+    plt.savefig(jpg_path)
+
+    with open(csv_path, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(cross_box)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -297,3 +304,4 @@ if __name__ == '__main__':
 
     with torch.no_grad():
         detect(opt)
+
